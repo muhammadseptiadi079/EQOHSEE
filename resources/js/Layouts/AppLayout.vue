@@ -114,49 +114,57 @@ function keluar() {
         </span>
       </a>
 
-      <!-- Pemilih modul -->
-      <div class="px-3 pt-3.5">
-        <div class="glass rounded-xl p-1 grid grid-cols-3 gap-1">
-          <component :is="tautan(m.inertia)"
-             v-for="m in menu.modul" :key="m.kunci" :href="m.url" :title="m.label"
-             class="relative grid place-items-center py-2 rounded-lg transition"
-             :class="m.aktif ? 'lime-gradient text-white shadow-glow'
-                             : 'text-white/55 hover:text-white hover:bg-white/5'">
-            <svg class="w-[17px] h-[17px]" fill="none" stroke="currentColor" stroke-width="2.2"
+      <!--
+        Daftar modul berbentuk akordeon: satu header per modul, modul yang
+        sedang aktif terbuka menampilkan halaman-halamannya, modul lain
+        tertutup dan tinggal satu baris. Mengeklik modul yang tertutup
+        berpindah ke halaman pertamanya (server yang menentukan modul aktif
+        berikutnya) — bukan membuka/menutup di sisi klien, sebab hanya
+        modul aktif yang dikirim server berikut isi grupnya.
+      -->
+      <nav class="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
+        <template v-for="m in menu.modul" :key="m.kunci">
+          <component :is="tautan(m.inertia)" :href="m.url"
+             class="relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px]
+                    font-bold transition"
+             :class="m.aktif ? 'text-cam-lime-light' : 'text-white/75 hover:bg-white/5 hover:text-white'">
+            <svg class="w-[16px] h-[16px] shrink-0" fill="none" stroke="currentColor" stroke-width="2.1"
                  viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" :d="m.ikon"/>
             </svg>
-            <span v-if="m.lencana" class="absolute top-0.5 right-0.5 min-w-[7px] h-[7px]
-                                          rounded-full bg-cam-lime-light"></span>
+            <span class="truncate">{{ m.label }}</span>
+            <span v-if="m.lencana" class="w-[7px] h-[7px] rounded-full bg-cam-lime-light shrink-0"></span>
+            <svg class="w-[14px] h-[14px] shrink-0 ml-auto transition-transform"
+                 :class="m.aktif ? 'rotate-180' : ''"
+                 fill="none" stroke="currentColor" stroke-width="2.2"
+                 viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/>
+            </svg>
           </component>
-        </div>
-        <div class="mt-2.5 px-1 text-[10px] font-bold uppercase tracking-[0.18em] text-cam-lime-light">
-          {{ menu.label }}
-        </div>
-      </div>
 
-      <nav class="flex-1 overflow-y-auto px-3 py-3">
-        <template v-for="(g, i) in menu.grup" :key="i">
-          <p v-if="g.nama" class="px-3 mt-3 mb-1 text-[9.5px] font-semibold uppercase
-                                  tracking-[0.12em] text-white/55">{{ g.nama }}</p>
-          <div class="space-y-0.5">
-            <component :is="tautan(b.inertia)"
-               v-for="b in g.butir" :key="b.url" :href="b.url"
-               class="relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[12.5px]
-                      font-semibold hover:bg-white/5 hover:text-white transition"
-               :class="b.aktif ? 'nav-active' : ''">
-              <span class="nav-accent absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5
-                           rounded-r-full bg-cam-lime-light opacity-0"></span>
-              <svg class="eq-navico" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                   stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path :d="b.ikon"/>
-              </svg>
-              <span>{{ b.label }}</span>
-              <span v-if="b.lencana" class="ml-auto text-[10px] font-bold leading-none px-1.5 py-1
-                                            rounded-full bg-cam-lime-light text-cam-ink">
-                {{ b.lencana > 99 ? '99+' : b.lencana }}
-              </span>
-            </component>
+          <!-- Isi modul aktif -->
+          <div v-if="m.aktif" class="pl-3 mb-1 space-y-0.5">
+            <template v-for="(g, i) in menu.grup" :key="i">
+              <p v-if="g.nama" class="px-3 mt-2 mb-1 text-[9.5px] font-semibold uppercase
+                                      tracking-[0.12em] text-white/55">{{ g.nama }}</p>
+              <component :is="tautan(b.inertia)"
+                 v-for="b in g.butir" :key="b.url" :href="b.url"
+                 class="relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[12.5px]
+                        font-semibold hover:bg-white/5 hover:text-white transition"
+                 :class="b.aktif ? 'nav-active' : ''">
+                <span class="nav-accent absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5
+                             rounded-r-full bg-cam-lime-light opacity-0"></span>
+                <svg class="eq-navico" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path :d="b.ikon"/>
+                </svg>
+                <span>{{ b.label }}</span>
+                <span v-if="b.lencana" class="ml-auto text-[10px] font-bold leading-none px-1.5 py-1
+                                              rounded-full bg-cam-lime-light text-cam-ink">
+                  {{ b.lencana > 99 ? '99+' : b.lencana }}
+                </span>
+              </component>
+            </template>
           </div>
         </template>
       </nav>
