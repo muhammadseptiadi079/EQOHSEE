@@ -141,7 +141,8 @@ function keluar() {
           </svg>
         </button>
 
-        <div v-show="pemilihTerbuka" class="mt-0.5 rounded-xl overflow-hidden bg-black/15">
+        <div v-show="pemilihTerbuka" id="eqPemilihModul"
+             class="mt-0.5 rounded-xl bg-black/15 max-h-[264px] overflow-y-auto">
           <component :is="tautan(m.inertia)"
              v-for="m in menu.modul" :key="m.kunci" :href="m.url"
              class="relative flex items-center gap-3 px-3 py-2.5 text-[12.5px] font-semibold transition"

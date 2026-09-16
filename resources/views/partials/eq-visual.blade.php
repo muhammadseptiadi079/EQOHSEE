@@ -293,8 +293,10 @@ main a{transition:color .16s}
 ::selection{background:rgba(44,176,188,.22)}
 
 /* gulir lebih halus di panel gelap */
-#eqSidebar nav::-webkit-scrollbar{width:5px}
-#eqSidebar nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:3px}
+#eqSidebar nav::-webkit-scrollbar,
+#eqPemilihModul::-webkit-scrollbar{width:5px}
+#eqSidebar nav::-webkit-scrollbar-thumb,
+#eqPemilihModul::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:3px}
 
 @media (prefers-reduced-motion: reduce){
   main .bg-white,#eqSidebar nav a,#eqSidebar .glass a,.eq-navico{transition:none!important}
